@@ -15,11 +15,17 @@
           wasd-controls 
           look-controls>
   <a-entity cursor="fuse: false"
-            raycaster="objects: .cliquable"
+            raycaster="objects: .clicable"
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
             material="color: black; shader: flat">
   </a-entity>
+</a-entity>
+
+<!-- Joueur -->
+<a-entity id="player" position="0 0 -10" player-controller>
+  <!-- Corps du joueur (optionnel, visible si vous voulez) -->
+  <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
 </a-entity>
 
   <!-- Assets pour les textures -->
@@ -40,9 +46,7 @@
       <a-plane position="0 0 -40" rotation="-90 0 0" width="100" height="100" color="#228B22" src="#grass" scale="3 3 3"></a-plane>
       <a-plane position="0 0.06 -45" rotation="-90 0 0" width="15" height="20" color="#deb887" scale="3 3 3"></a-plane>
      
-      <!-- cenote-->
-      <a-plane position="-34 2 67" rotation="-90 0 0" width="15" height="15" src="#cenote" scale="3 3 3" class="clicable"></a-plane>
-  <!-- Pyramide Maya : El Castillo -->
+ <!-- Pyramide Maya : El Castillo -->
       <a-entity id="Castillo" position="0 0 -45" scale="3 3 3" class="clicable">
             <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#Kukulcan"></a-box>
             <a-box position="0 1.5 0"` width="9" depth="9" height="1" src="#Kukulcan"></a-box>
@@ -61,10 +65,6 @@
   <!-- Tzompantli -->
         <a-entity id="Tzompantli" gltf-model="#tzompantli" position="5 0 -180" scale="1 1 1" class="clicable"></a-entity>
       
-
-
-  <!-- tree -->
-        <a-entity gltf-model="#tree" position="18 0 -18" scale="10 30 10"></a-entity>
         
   <!-- Temple des Guerriers -->
         <a-entity id="Temple des Guerriers" position="108 0 -143" scale="3 3 3" class="clicable">
@@ -387,4 +387,5 @@ document.addEventListener('DOMContentLoaded', () => {
     </a-scene>
   
 </body>
+
 </html>
