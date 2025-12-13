@@ -1,33 +1,305 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>Chichen Itzá</title>
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/fernandojsg/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras/dist/aframe-extras.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projet final_Chichén Itzá</title>
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+<!-- =========================
+       COMPOSANTS "BIBLIOTHÈQUE"
+       ========================= -->
+  <script>
+    /**
+     * Déplacement clavier relatif à la caméra.
+     * - WASD pour se déplacer
+     * - SHIFT pour accélérer (optionnel)
+     *
+     * Appliquer sur l'entité #player.
+     */
+    AFRAME.registerComponent('player-controller', {
+      schema: {
+        speed: { type: 'number', default: 3.5 },
+        sprintMultiplier: { type: 'number', default: 1.6 }
+      },
+      init() {
+        this.keys = Object.create(null);
+        this.tmpVec3 = new THREE.Vector3();
+        this.forward = new THREE.Vector3();
+        this.right = new THREE.Vector3();
+
+        window.addEventListener('keydown', (e) => { this.keys[e.code] = true; });
+        window.addEventListener('keyup',   (e) => { this.keys[e.code] = false; });
+      },
+      tick(time, dt) {
+        const dts = dt / 1000;
+        if (!dts) return;
+
+        // Inputs
+        let x = 0, z = 0;
+        if (this.keys['KeyW']) z -= 1;
+        if (this.keys['KeyS']) z += 1;
+        if (this.keys['KeyA']) x -= 1;
+        if (this.keys['KeyD']) x += 1;
+
+        if (x === 0 && z === 0) return;
+
+        // Normalisation
+        const len = Math.hypot(x, z);
+        x /= len; z /= len;
+
+        // Direction relative à la caméra (yaw uniquement)
+        const cam = this.el.sceneEl.camera;
+        if (!cam) return;
+
+        this.forward.set(0, 0, -1).applyQuaternion(cam.quaternion);
+        this.forward.y = 0; this.forward.normalize();
+
+        this.right.copy(this.forward).cross(new THREE.Vector3(0, 1, 0)).normalize();
+
+        // Vitesse
+        let speed = this.data.speed;
+        if (this.keys['ShiftLeft'] || this.keys['ShiftRight']) speed *= this.data.sprintMultiplier;
+
+        // Δpos = right*x + forward*z
+        this.tmpVec3.set(0,0,0);
+        this.tmpVec3.addScaledVector(this.right, x);
+        this.tmpVec3.addScaledVector(this.forward, z);
+        this.tmpVec3.multiplyScalar(speed * dts);
+
+        const obj = this.el.object3D;
+        obj.position.add(this.tmpVec3);
+
+        // Orienter le joueur dans la direction du mouvement (optionnel, utile en 3e personne)
+        const yaw = Math.atan2(this.tmpVec3.x, this.tmpVec3.z);
+        obj.rotation.y = yaw;
+      }
+    });
+
+    /**
+     * Caméra 3e personne (orbit souris + follow).
+     * - Maintenir clic gauche + bouger la souris pour tourner autour du joueur
+     * - La caméra suit la cible en conservant une distance/hauteur
+     *
+     * Appliquer sur l'entité #camRig.
+     */
+    AFRAME.registerComponent('third-person-camera', {
+      schema: {
+        target: { type: 'selector' },
+        distance: { type: 'number', default: 4.2 },
+        height: { type: 'number', default: 1.8 },
+        sensitivity: { type: 'number', default: 0.12 },
+        pitchMin: { type: 'number', default: -10 },
+        pitchMax: { type: 'number', default: 55 }
+      },
+      init() {
+        this.yaw = 180;   // derrière le joueur au départ
+        this.pitch = 15;
+        this.dragging = false;
+
+        this.el.sceneEl.addEventListener('renderstart', () => {
+          const canvas = this.el.sceneEl.canvas;
+          if (!canvas) return;
+
+          canvas.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            this.dragging = true;
+          });
+          window.addEventListener('mouseup', () => { this.dragging = false; });
+          window.addEventListener('mousemove', (e) => {
+            if (!this.dragging) return;
+            this.yaw   -= e.movementX * this.data.sensitivity;
+            this.pitch -= e.movementY * this.data.sensitivity;
+            this.pitch = Math.max(this.data.pitchMin, Math.min(this.data.pitchMax, this.pitch));
+          });
+        });
+      },
+      tick() {
+        const target = this.data.target;
+        if (!target) return;
+
+        const t = target.object3D.position;
+
+        const yawRad = THREE.MathUtils.degToRad(this.yaw);
+        const pitchRad = THREE.MathUtils.degToRad(this.pitch);
+
+        const r = this.data.distance;
+        const cosP = Math.cos(pitchRad);
+
+        const camX = t.x + r * Math.sin(yawRad) * cosP;
+        const camY = t.y + this.data.height + r * Math.sin(pitchRad);
+        const camZ = t.z + r * Math.cos(yawRad) * cosP;
+
+        this.el.object3D.position.set(camX, camY, camZ);
+        this.el.object3D.lookAt(t.x, t.y + this.data.height, t.z);
+      }
+    });
+    /**
+     * Utilisation:
+     *  info-on-click="panel: #infoPanel; text: #infoValue; lines: phrase1|phrase2|phrase3"
+     */
+    AFRAME.registerComponent('info-on-click', {
+      schema: {
+        panel: { type: 'selector' },
+        text:  { type: 'selector' },
+        lines: { type: 'string', default: '' }
+      },
+      init() {
+        this.index = 0;
+        this.lines = (this.data.lines || '').split('|').map(s => s.trim()).filter(Boolean);
+
+        this.el.classList.add('cliquable');
+
+        this.el.addEventListener('click', () => {
+          if (!this.data.panel || !this.data.text || this.lines.length === 0) return;
+
+          this.data.panel.setAttribute('visible', true);
+          this.data.text.setAttribute('value', this.lines[this.index]);
+
+          this.index = (this.index + 1) % this.lines.length;
+        });
+      }
+    });
+
+    /**
+     * PNJ guide: affiche une bulle de dialogue (HUD) avec un script.
+     * Utilisation:
+     *  guide-dialogue="panel:#dialoguePanel; text:#dialogueValue; lines: a|b|c"
+     */
+    AFRAME.registerComponent('guide-dialogue', {
+      schema: {
+        panel: { type: 'selector' },
+        text:  { type: 'selector' },
+        lines: { type: 'string', default: '' }
+      },
+      init() {
+        this.index = 0;
+        this.lines = (this.data.lines || '').split('|').map(s => s.trim()).filter(Boolean);
+
+        this.el.classList.add('cliquable');
+
+        this.el.addEventListener('click', () => {
+          if (!this.data.panel || !this.data.text || this.lines.length === 0) return;
+
+          this.index = 0;
+          this.data.panel.setAttribute('visible', true);
+          this.data.text.setAttribute('value', this.lines[this.index]);
+        });
+
+        // Clic sur la bulle = phrase suivante
+        if (this.data.panel) {
+          this.data.panel.addEventListener('click', () => {
+            if (this.lines.length === 0) return;
+            this.index = (this.index + 1) % this.lines.length;
+            this.data.text.setAttribute('value', this.lines[this.index]);
+          });
+        }
+      }
+    });
+
+    /**
+     * Boutons "fermer" des panneaux HUD.
+     * Utilisation:
+     *  hud-close="target: #infoPanel"
+     */
+    AFRAME.registerComponent('hud-close', {
+      schema: { target: { type: 'selector' } },
+      init() {
+        this.el.classList.add('cliquable');
+        this.el.addEventListener('click', () => {
+          if (this.data.target) this.data.target.setAttribute('visible', false);
+        });
+      }
+    });
+
+    /**
+     * Démo physique minimale (visible immédiatement):
+     * - génère 2 objets dynamiques à faire tomber/pousser
+     */
+    AFRAME.registerComponent('spawn-physics-demo', {
+      init() {
+        // Créer quelques objets dynamiques dans la scène
+        const scene = this.el.sceneEl;
+
+        const makeSphere = (x, y, z) => {
+          const s = document.createElement('a-sphere');
+          s.setAttribute('radius', '0.25');
+          s.setAttribute('color', '#BDBDBD');
+          s.setAttribute('position', `${x} ${y} ${z}`);
+          s.setAttribute('dynamic-body', 'mass: 1;');
+          scene.appendChild(s);
+        };
+
+        const makeBox = (x, y, z) => {
+          const b = document.createElement('a-box');
+          b.setAttribute('depth', '0.35');
+          b.setAttribute('height', '0.35');
+          b.setAttribute('width', '0.35');
+          b.setAttribute('color', '#9E9E9E');
+          b.setAttribute('position', `${x} ${y} ${z}`);
+          b.setAttribute('dynamic-body', 'mass: 1;');
+          scene.appendChild(b);
+        };
+
+        makeSphere(1.2, 3.0, -4.0);
+        makeBox(-1.0, 3.3, -4.2);
+      }
+    });
+  </script>
 </head>
+
 <body>
+<!--Scène simplifiée : 
+    - Déplacement 3e personne (clavier/souris), relatif à la caméra
+    - Physique (système + objets dynamiques)
+    - 2 composants mutualisables: info-on-click + guide-dialogue (+ hud-close)
+  -->
+    <a-scene physics="gravity: -9.8">
+  <a-plane position="0 0 -40"
+           rotation="-90 0 0"
+           width="100" height="100"
+           class="cliquable"
+           static-body>
+  </a-plane>
+
+  <a-sphere position="0 5 -10" radius="0.3" color="#AAA" dynamic-body></a-sphere>
+  <a-box position="1 6 -10" depth="0.4" height="0.4" width="0.4" color="#BBB" dynamic-body></a-box></a-scene>
+    
     <a-scene scale="3 3 3">
       <a-entity light="type: ambient; intensity: 4" position= "3 5 2"></a-entity>
-      <a-entity camera 
+    
+        <a-entity camera 
           position="0 1.6 0" 
           wasd-controls 
-          look-controls>
+          look-controls ></a-entity>
   <a-entity cursor="fuse: false"
-            raycaster="objects: .clicable"
+            raycaster="objects: .cliquable"
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
             material="color: black; shader: flat">
   </a-entity>
-</a-entity>
 
 <!-- Joueur -->
 <a-entity id="player" position="0 0 -10" player-controller>
-  <!-- Corps du joueur (optionnel, visible si vous voulez) -->
-  <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
+<!-- Corps du joueur (optionnel, visible si vous voulez) -->
+<a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
 </a-entity>
-
+          
+<!-- Caméra 3e personne -->
+<a-entity id="camRig"
+          third-person-camera="target: #player; distance: 4; height: 1.8; sensitivity: 0.12;">
+<a-camera></a-camera>
+<!-- Cursor pour clic souris -->
+  <a-entity id="cursor"
+            cursor="fuse:false"
+            raycaster="objects: .cliquable"
+            position="0 0 -1"
+            geometry="primitive:ring; radiusInner:0.01; radiusOuter:0.02"
+            material="color:black; shader:flat">
+  </a-entity>
+</a-entity>
+          
   <!-- Assets pour les textures -->
       <a-assets>
          <img id="Kukulcan" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/TCom_Rock_CliffVolcanic2_header.jpg?v=1746379477374">
@@ -47,7 +319,7 @@
       <a-plane position="0 0.06 -45" rotation="-90 0 0" width="15" height="20" color="#deb887" scale="3 3 3"></a-plane>
      
  <!-- Pyramide Maya : El Castillo -->
-      <a-entity id="Castillo" position="0 0 -45" scale="3 3 3" class="clicable">
+      <a-entity id="Castillo" position="0 0 -45" scale="3 3 3" class="cliquable">
             <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#Kukulcan"></a-box>
             <a-box position="0 1.5 0"` width="9" depth="9" height="1" src="#Kukulcan"></a-box>
             <a-box position="0 2.5 0" width="8" depth="8" height="1" src="#Kukulcan"></a-box>
@@ -67,7 +339,7 @@
       
         
   <!-- Temple des Guerriers -->
-        <a-entity id="Temple des Guerriers" position="108 0 -143" scale="3 3 3" class="clicable">
+        <a-entity id="Temple des Guerriers" position="108 0 -143" scale="3 3 3" class="cliquable">
           <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#stone"></a-box>
           <a-box position="0 1.5 0" width="9" depth="9" height="1" src="#stone"></a-box>
           <a-box position="0 2.5 0" width="8" depth="8" height="1" src="#stone"></a-box>
@@ -102,7 +374,7 @@
         <a-entity id="mercado" gltf-model="#marche" position="33 0 -8" scale="1 1 1"></a-entity>
 
         <!-- El Caracol Observatory -->
-      <a-entity id="Caracol" position="-108 0 62" scale="3 3 3" class="clicable">
+      <a-entity id="Caracol" position="-108 0 62" scale="3 3 3" class="cliquable">
     <!-- Base carrée -->
         <a-box position="0 0.5 0" width="6" depth="6" height="1" src="#stone"></a-box>
         <a-box position="0 1.5 0" width="4.5" depth="4.5" height="1" src="#stone"></a-box>
@@ -389,3 +661,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
