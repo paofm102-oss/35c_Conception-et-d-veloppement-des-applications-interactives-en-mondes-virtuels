@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Chichen Itzá</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fernandojsg/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras/dist/aframe-extras.min.js"></script>
+</head>
+<body>
+    <a-scene scale="3 3 3">
+      <a-entity light="type: ambient; intensity: 4" position= "3 5 2"></a-entity>
+      <a-entity camera 
+          position="0 1.6 0" 
+          wasd-controls 
+          look-controls>
+  <a-entity cursor="fuse: false"
+            raycaster="objects: .cliquable"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
+            material="color: black; shader: flat">
+  </a-entity>
+</a-entity>
+
+  <!-- Assets pour les textures -->
+      <a-assets>
+         <img id="Kukulcan" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/TCom_Rock_CliffVolcanic2_header.jpg?v=1746379477374">
+         <img id="stone" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/Stone.JPG?v=1746379176283">
+         <img id= "grass" src= "https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/pastoo.JPG?v=1746456645508">
+         <img id="cenote" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/cenote.jpeg?v=1746456350032">
+         <a-asset-item id="tree" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/tree .glb?v=1746454285573"></a-asset-item>  
+         <a-asset-item id= "tzompantli" src="https://cdn.glitch.me/f0de172e-e436-49ee-ae2c-94d671d266ff/Tzompantli .glb?v=1746383332024"></a-asset-item>
+         <a-asset-item id= "marche" scr="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/maya_temple .glb?v=1746452494044"></a-asset-item>
+      </a-assets>
+
+
+      
+
+  <!-- Sol jungle -->
+      <a-plane position="0 0 -40" rotation="-90 0 0" width="100" height="100" color="#228B22" src="#grass" scale="3 3 3"></a-plane>
+      <a-plane position="0 0.06 -45" rotation="-90 0 0" width="15" height="20" color="#deb887" scale="3 3 3"></a-plane>
+     
+      <!-- cenote-->
+      <a-plane position="-34 2 67" rotation="-90 0 0" width="15" height="15" src="#cenote" scale="3 3 3" class="clicable"></a-plane>
+  <!-- Pyramide Maya : El Castillo -->
+      <a-entity id="Castillo" position="0 0 -45" scale="3 3 3" class="clicable">
+            <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 1.5 0"` width="9" depth="9" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 2.5 0" width="8" depth="8" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 3.5 0" width="7" depth="7" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 4.5 0" width="6" depth="6" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 5.5 0" width="5" depth="5" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 6.5 0" width="4" depth="4" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 7.5 0" width="3" depth="3" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 8.5 0" width="2" depth="2" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 9.5 0" width="1" depth="1" height="1" src="#Kukulcan"></a-box>
+          </a-entity>
+  
+
+
+  <!-- Tzompantli -->
+        <a-entity id="Tzompantli" gltf-model="#tzompantli" position="5 0 -180" scale="1 1 1" class="clicable"></a-entity>
+      
+
+
+  <!-- tree -->
+        <a-entity gltf-model="#tree" position="18 0 -18" scale="10 30 10"></a-entity>
+        
+  <!-- Temple des Guerriers -->
+        <a-entity id="Temple des Guerriers" position="108 0 -143" scale="3 3 3" class="clicable">
+          <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#stone"></a-box>
+          <a-box position="0 1.5 0" width="9" depth="9" height="1" src="#stone"></a-box>
+          <a-box position="0 2.5 0" width="8" depth="8" height="1" src="#stone"></a-box>
+          <a-box position="0 3.5 0" width="7" depth="7" height="1" src="#stone"></a-box>
+          <a-box position="0 4.5 0" width="6" depth="6" height="1" src="#stone"></a-box>
+          <a-box position="0 5.5 0" width="5" depth="5" height="1" src="#stone"></a-box>
+          <a-box position="0 6.5 0" width="4" depth="4" height="1" src="#stone"></a-box>
+          <a-box position="0 7.5 0" width="3" depth="3" height="1" src="#stone"></a-box>
+          <a-box position="0 8.5 0" width="2" depth="2" height="1" src="#stone"></a-box>
+          <a-box position="0 9.5 0" width="1" depth="1" height="1" src="#stone"></a-box>
+        </a-entity>
+
+  <!-- Colonnade (deux rangées de 6 colonnes) -->
+        <a-entity id="precolonnes" position="106 0 -65" scale="3 3 3">
+            <a-cylinder position="-5 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="-3 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="-1 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="1 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="3 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="5 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+        </a-entity>
+        <a-entity id="deuxcolonnes" position="106 0 -36" scale="3 3 3">
+            <a-cylinder position="-5 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="-3 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="-1 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="1 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="3 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+            <a-cylinder position="5 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
+        </a-entity>
+      
+    <!-- marche -->
+        <a-entity id="mercado" gltf-model="#marche" position="33 0 -8" scale="1 1 1"></a-entity>
+
+        <!-- El Caracol Observatory -->
+      <a-entity id="Caracol" position="-108 0 62" scale="3 3 3" class="clicable">
+    <!-- Base carrée -->
+        <a-box position="0 0.5 0" width="6" depth="6" height="1" src="#stone"></a-box>
+        <a-box position="0 1.5 0" width="4.5" depth="4.5" height="1" src="#stone"></a-box>
+
+    <!-- Observatoire circulaire -->
+        <a-cylinder position="0 3 0" radius="1.5" height="2" src="#stone"></a-cylinder>
+        <a-sphere position="0 4.5 0" radius="1.2" color="#bfa980"></a-sphere>
+
+    <!-- Détail : porte -->
+        <a-box position="0 2.5 1.5" width="0.8" height="1" depth="0.1" color="#333"></a-box>
+      </a-entity>
+
+        <!-- Temple des Jaguars -->
+        <a-entity id="Jaguars" position="-118 0 -62" scale="3 3 3" class="clicable">
+            <a-box position="0 0.5 0" width="6" depth="6" height="1" src="#stone"></a-box>
+            <a-box position="0 1.5 0" width="4.5" depth="4.5" height="1" src="#stone"></a-box>
+            <a-box position="0 2.5 0" width="3" depth="3" height="1" src="#stone"></a-box>
+            <a-box position="0 4 0" width="2.5" height="1.5" depth="2.5" src="#stone"></a-box>
+        </a-entity>
+        <a-entity position="110 0 45" scale="3 3 3">
+            <a-box position="0 0.5 0" width="6" depth="6" height="1" src="#stone"></a-box>
+            <a-box position="0 1.5 0" width="4.5" depth="4.5" height="1" src="#stone"></a-box>
+            <a-box position="0 2.5 0" width="3" depth="3" height="1" src="#stone"></a-box>
+            <a-box position="0 4 0" width="2.5" height="1.5" depth="2.5" src="#stone"></a-box>
+        </a-entity>
+
+        <!-- Terrain de jeu de balle -->
+        <a-entity id="pelota" position="-102 0 -167" scale="2 2 2" class="clicable">
+            <a-box position="0 0.05 0" width="30" height="0.1" depth="6" color="#5a4e3c"></a-box>
+            <a-box position="-15 2 0" width="0.5" height="4" depth="6" src="#stone"></a-box>
+            <a-box position="15 2 0" width="0.5" height="4" depth="6" src="#stone"></a-box>
+            <a-torus position="-14 3 0" radius="0.5" radius-tubular="0.1" rotation="0 0 90" color="#333"></a-torus>
+            <a-torus position="14 3 0" radius="0.5" radius-tubular="0.1" rotation="0 0 90" color="#333"></a-torus>
+        </a-entity>
+
+        <a-entity id="pyramide" position="38 0 68" scale="3 3 3" class="clicable">
+          <a-box position="0 0.5 0" width="6" depth="6" height="1" src="#stone"></a-box>
+          <a-box position="0 1.5 0" width="4.5" depth="4.5" height="1" src="#stone"></a-box>
+          <a-box position="0 2.5 0" width="3" depth="3" height="1" src="#stone"></a-box> 
+    <!-- Temple au sommet -->
+        <a-box position="0 3.75 0" width="2" depth="2" height="1.5" src="#stone"></a-box>
+    <!-- Détails : colonnes du temple -->
+        <a-cylinder position="0.9 3.25 0.9" radius="0.1" height="1" color="#8a7b68"></a-cylinder>
+        <a-cylinder position="-0.9 3.25 0.9" radius="0.1" height="1" color="#8a7b68"></a-cylinder>
+        <a-cylinder position="0.9 3.25 -0.9" radius="0.1" height="1" color="#8a7b68"></a-cylinder>
+        <a-cylinder position="-0.9 3.25 -0.9" radius="0.1" height="1" color="#8a7b68"></a-cylinder>
+      </a-entity>
+
+        <!-- Ciel -->
+        <assets>
+          <a-asset-item id="cloud" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/cloud.glb?v=1746471359274"></a-asset-item>
+        </assets>
+        <a-sky color="#88ccff"></a-sky>
+        <a-entity gltf-model="#cloud" position="8 123 27" scale="7 7 7"></a-entity>
+        <a-entity gltf-model="#cloud" position="37 123 -180" scale="7 7 7"></a-entity>
+        <a-entity gltf-model="#cloud" position="-111 123 -117" scale="7 7 7"></a-entity>
+        <a-entity gltf-model="#cloud" position="-120 123 -4" scale="7 7 7"></a-entity>
+        <a-entity gltf-model="#cloud" position="64 123 -62" scale="7 7 7"></a-entity>
+      
+    <!--Scene 1_guide--> 
+        <a-assets><a-asset-item id="guide" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/man.glb?v=1746484247413"></a-asset-item></a-assets>
+        <a-entity gltf-model="#guide" position="-10 0 -82" 
+                scale="2 2 2" 
+                rotation="0 180 0" 
+                customiser-homme
+                class="cliquable" faire-parler></a-entity>
+    
+  <!--bulle de texte--> 
+      <a-entity id="bulle"
+          position="0 2.2 -4"
+          visible="false"
+          class="cliquable">
+      <a-plane color="#0000" opacity="0.7" width="3" height="0.8"></a-plane>
+      <a-text id="bulle-text"
+          value="o"
+          align="center"
+          color="#FFF"
+          width="2.5"
+          position="0 0 0.01">
+      </a-text>
+      </a-entity>
+      
+  <!-- curseur -->    
+      <a-entity id="cursor" cursor="fuse: false" raycaster="objects: .cliquable" 
+          position="0 0 -1" 
+          geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
+          material="color: black; shader: flat">
+      </a-entity>
+      <a-entity id="infoText" visible="false" position="0 2 -45">
+      <a-plane width="4.5" height="2" color="#fff" opacity="0.9"></a-plane>
+      <a-text id="infoTextValue" value="" color="#000" align="center" width="3.5" position="0 0.3 0.01"></a-text>
+      <a-box id="closeButton" position="0 -0.6 0.01" width="1.2" height="0.4" depth="0.1" color="#c44"></a-box>
+      <a-text value="Fermer" position="0 -0.6 0.02" align="center" color="#fff" width="2"></a-text>
+      </a-entity>
+      
+      <a-entity camera position="0 1.6 0">
+        <a-entity cursor></a-entity>
+      </a-entity>
+      
+  <!-- COMPOSANTS SCRIPT -->
+     <script>
+  const guidephrases = [
+    "Bonjour et bienvenue à la Ruta Maya, je vous montrerai une des villes les plus importantes et puissantes de la culture Maya.",
+    "Chichen Itzá",
+    "Je m’appelle Aj Koo et je serais ton guide.",
+    "Suis-moi, je vais te faire découvrir les secrets de ma civilisation !"
+  ];
+  let indexPhrase = 0;
+
+  AFRAME.registerComponent('customiser-homme', {
+    init: function () {
+      this.el.addEventListener('model-loaded', () => {
+        const mesh = this.el.getObject3D('mesh');
+        if (!mesh) return;
+        let count = 0;
+        mesh.traverse((node) => {
+          if (node.isMesh) {
+            if (count === 0) node.material.color.set("#AE703A");
+            else if (count === 1) node.material.color.set("#6F4E37");
+            else if (count === 2) node.material.color.set("#4B3621");
+            else node.material.color.set("#CCCCCC");
+            count++;
+          }
+        });
+      });
+    }
+  });
+
+  AFRAME.registerComponent('faire-parler', {
+    init: function () {
+      const guide = this.el;
+      const bulle = document.querySelector('#bulle');
+      const texte = document.querySelector('#bulle-text');
+
+      // Affiche la première phrase au clic sur le guide
+      guide.addEventListener('click', () => {
+        indexPhrase = 0;
+        texte.setAttribute('value', phrases[indexPhrase]);
+        bulle.setAttribute('visible', 'true');
+      });
+
+      // Avance dans les phrases au clic sur la bulle
+      bulle.addEventListener('click', () => {
+        indexPhrase++;
+        if (indexPhrase >= phrases.length) {
+          indexPhrase = 0;
+        }
+        texte.setAttribute('value', phrases[indexPhrase]);
+      });
+    }
+  });
+  // === Bouton "Fermer" ===
+document.addEventListener('DOMContentLoaded', () => {
+  const closeButton = document.querySelector('#closeButton');
+  if (closeButton) {
+    closeButton.addEventListener('click', () => {
+      document.querySelector('#infoText').setAttribute('visible', false);
+    });
+  }
+});
+    </script>
+
+    <!--Scene 2_Kukulcan>
+    <!-- Texte flottant (affiché au clic) -->
+    <a-entity id="infoText" visible="false" position="0 2 -45">
+      <a-plane width="4" height="1.5" color="#fff" opacity="0.9"></a-plane>
+      <a-text id="infoTextValue" value="" color="#000" align="center" width="3.5" position="0 0 0.01"></a-text>
+    </a-entity>
+
+    <script>
+  const Castillophrases = [
+    "Vers l’an 435, la ville de Chichen Itzá est fondée.",
+    "Le nom Chichen signifie \"bouche du puits\" et Itzá fait référence aux Itzáes, \"sorcières de l'eau\".",
+    "Voici “El Castillo”. Un temple religieux et astronomique.",
+    "Notre religion est polythéiste : nos dieux sont dans les étoiles, la pluie, la terre..."
+  ];
+  let phraseIndex = 0;
+
+  AFRAME.registerComponent('show-info-step', {
+    init: function () {
+      this.el.addEventListener('click', () => {
+        const infoEntity = document.querySelector('#infoText');
+        const infoText = document.querySelector('#infoTextValue');
+        const position = this.el.getAttribute('position');
+
+        // Afficher le panneau si pas encore visible
+        infoEntity.setAttribute('visible', true);
+        infoEntity.setAttribute('position', {
+          x: position.x,
+          y: position.y + 3,
+          z: position.z
+        });
+
+        // Afficher la phrase actuelle
+        infoText.setAttribute('value', phrases[phraseIndex]);
+
+        // Passer à la suivante, ou boucler
+        phraseIndex = (phraseIndex + 1) % phrases.length;});}});
+
+  // Activer le nouveau composant sur El Castillo
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#castillo').setAttribute('show-info-step', '');
+  });
+    </script>
+
+  
+  <!-- Scene 3_Tzompantli --> 
+      
+  <!-- Scene 4_Jeu de balle -->
+      <script> const pelotaPhrases = [
+    "Ici nous jouons au 'pok-ta-pok' (jeu de balle).",
+    "C’est un jeu destiné à honorer les dieux et à équilibrer le monde.",
+    "Le ballon représente le soleil, les murs représentent les limites du cosmos.",
+    "C’est un rituel : le gagnant est sacrifié et offert aux dieux."
+  ];
+  let pelotaIndex = 0;
+
+  AFRAME.registerComponent('show-info-pelota', {
+    init: function () {
+      this.el.addEventListener('click', () => {
+        const infoEntity = document.querySelector('#infoText');
+        const infoText = document.querySelector('#infoTextValue');
+        const position = this.el.getAttribute('position');
+
+        infoEntity.setAttribute('visible', true);
+        infoEntity.setAttribute('position', {
+          x: position.x,
+          y: position.y + 3,
+          z: position.z
+        });
+
+        infoText.setAttribute('value', pelotaPhrases[pelotaIndex]);
+        pelotaIndex = (pelotaIndex + 1) % pelotaPhrases.length;
+      });
+    }
+  });
+
+  document.querySelector('#pelota').setAttribute('show-info-pelota', '');
+</script>
+      
+  <!-- Scene 5_ Temple des Guerriers>
+
+
+  <!--Scene 6 --> 
+  <!--Scene 7 --> 
+  
+  <!--Scene 8_El Caracol--> 
+      <script> const caracolPhrases = [
+    "La culture Maya est caractérisée par le progrès technologique, surtout en astronomie et mathématique.",
+    "Le Caracol est un observatoire, avec quatre ouvertures qui regardent un dieu ou une étoile.",
+    "Les Mayas ont pu prédire la météo, les saisons et les éclipses."
+  ];
+  let caracolIndex = 0;
+
+  AFRAME.registerComponent('show-info-caracol', {
+    init: function () {
+      this.el.addEventListener('click', () => {
+        const infoEntity = document.querySelector('#infoText');
+        const infoText = document.querySelector('#infoTextValue');
+        const position = this.el.getAttribute('position');
+
+        infoEntity.setAttribute('visible', true);
+        infoEntity.setAttribute('position', {
+          x: position.x,
+          y: position.y + 3,
+          z: position.z
+        });
+
+        infoText.setAttribute('value', caracolPhrases[caracolIndex]);
+        caracolIndex = (caracolIndex + 1) % caracolPhrases.length;
+      });
+    }
+  });
+
+  document.querySelector('#Caracol').setAttribute('show-info-caracol', '');
+  </script>
+      
+      
+      
+      
+      
+    </a-scene>
+  
+</body>
+</html>
