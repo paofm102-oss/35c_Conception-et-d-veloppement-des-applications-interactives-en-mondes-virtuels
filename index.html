@@ -197,6 +197,17 @@
     physics="gravity: -9.8"
     spawn-physics-demo>
 
+    <!-- Assets -->
+    <a-assets>
+      <img id="Kukulcan" src="models/volcanicrock.jpg">
+      <img id="stone" src="models/Stone.JPG">
+      <img id="grass" src="models/pastoo.JPG">
+
+      <a-asset-item id="guidemodel" src="models/guide.glb"></a-asset-item>
+      <a-asset-item id="tzompantlimodel" src="models/Tzompantli.glb"></a-asset-item>
+      <a-asset-item id="cloudmodel" src="models/cloud.glb"></a-asset-item>
+    </a-assets>
+
     <!-- Lumières -->
     <a-entity light="type: ambient; intensity: 1.2"></a-entity>
     <a-entity light="type: directional; intensity: 0.9" position="2 6 2"></a-entity>
@@ -206,72 +217,55 @@
       position="0 0 0"
       rotation="-90 0 0"
       width="120" height="120"
-      src="#grass"; repeat: 30 30"
+      material="src= #grass"; repeat: 30 30"
       static-body>
     </a-plane>
 
-    <!-- Assets -->
-    <a-assets>
-      <img id="Kukulcan" src="models/volcanicrock.jpg">
-      <img id="stone" src="models/Stone.JPG">
-      <img id="grass" src="models/pastoo.JPG">
-
-      <a-asset-item id="guide" src="models/guide.glb"></a-asset-item>
-      <a-asset-item id="tzompantli" src="models/Tzompantli.glb"></a-asset-item>
-      <a-asset-item id="cloud" src="models/cloud.glb"></a-asset-item>
-   
-    </a-assets>
-
 
     <!--Nuages-->
-    <a-entity gltf-model="#cloud" position="0 25 -20" scale="6 6 6"></a-entity>
-    <a-entity gltf-model="#cloud" position="20 28 -10" scale="7 7 7"></a-entity>
-    <a-entity gltf-model="#cloud" position="-22 26 -30" scale="6 6 6"></a-entity>
-    <a-entity gltf-model="#cloud" position="10 24 -45" scale="5 5 5"></a-entity>
+    <a-entity gltf-model="#cloudmodel" position="0 25 -20" scale="6 6 6"></a-entity>
+    <a-entity gltf-model="#cloudmodel" position="20 28 -10" scale="7 7 7"></a-entity>
+    <a-entity gltf-model="#cloudmodel" position="-22 26 -30" scale="6 6 6"></a-entity>
+    <a-entity gltf-model="#cloudmodel" position="10 24 -45" scale="5 5 5"></a-entity>
 
     <!-- ===========
          JOUEUR + CAMÉRA 3e personne
          =========== -->
     <a-entity id="player" position="0 0 0" player-controller="speed: 3.6;">
-      <!-- Corps invisible (optionnel) -->
-      <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
+    <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
     </a-entity>
 
-    <a-entity id="camRig" third-person-camera="target: #player; distance: 6; height: 2; sensitivity: 0.12;">
-      <a-camera></a-camera>
+  <a-entity id="camRig" third-person-camera="target: #player; distance: 6; height: 2; sensitivity: 0.12;">
+    <a-camera></a-camera>
 
-      <!-- Cursor (clic souris) -->
-      <a-entity
-        cursor="fuse: false"
-        raycaster="objects: .cliquable"
-        position="0 0 -1"
-        geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
-        material="color: black; shader: flat">
-      </a-entity>
+    <a-entity
+    cursor="fuse: false"
+    raycaster="objects: .cliquable"
+    position="0 0 -1"
+    geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
+    material="color: black; shader: flat">
+    </a-entity>
 
-    <!-- ===========
-           HUD (panneaux UI)
-           =========== -->
-    <!-- Dialogue du guide -->
+  <!-- HUD -->
     <a-entity id="dialoguePanel" visible="false" position="0 -0.35 -1.2">
-        <a-plane width="1.6" height="0.45" color="#000" opacity="0.65"></a-plane>
-        <a-text id="dialogueValue" value="" align="center" color="#FFF" width="1.5" position="0 0 0.01"></a-text>
-        <a-box position="0 -0.33 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" hud-close="target: #dialoguePanel"></a-box>
-        <a-text value="Fermer" position="0 -0.33 0.03" align="center" color="#FFF" width="1.0"></a-text>
-      </a-entity>
-      <!-- Panneau d'infos générique -->
-      <a-entity id="infoPanel" visible="false" position="0 0.35 -1.2">
-        <a-plane width="1.9" height="0.7" color="#FFF" opacity="0.92"></a-plane>
-        <a-text id="infoValue" value="" align="center" color="#111" width="1.75" position="0 0.12 0.01"></a-text>
-        <a-box position="0 -0.26 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" hud-close="target: #infoPanel"></a-box>
-        <a-text value="Fermer" position="0 -0.26 0.03" align="center" color="#FFF" width="1.0"></a-text>
-      </a-entity>
+      <a-plane width="1.6" height="0.45" color="#000" opacity="0.65"></a-plane>
+      <a-text id="dialogueValue" value="" align="center" color="#FFF" width="1.5" position="0 0 0.01"></a-text>
+      <a-box position="0 -0.33 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" hud-close="target: #dialoguePanel"></a-box>
+      <a-text value="Fermer" position="0 -0.33 0.03" align="center" color="#FFF" width="1.0"></a-text>
     </a-entity>
+
+    <a-entity id="infoPanel" visible="false" position="0 0.35 -1.2">
+      <a-plane width="1.9" height="0.7" color="#FFF" opacity="0.92"></a-plane>
+      <a-text id="infoValue" value="" align="center" color="#111" width="1.75" position="0 0.12 0.01"></a-text>
+      <a-box position="0 -0.26 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" hud-close="target: #infoPanel"></a-box>
+      <a-text value="Fermer" position="0 -0.26 0.03" align="center" color="#FFF" width="1.0"></a-text>
+    </a-entity>
+  </a-entity>
 
     <!-- Guide (cliquable) -->
     <a-entity
-      id="guiden"
-      gltf-model="#guide"
+      id="guide"
+      gltf-model="#guidemodel"
       position="-6 0 -10"
       scale="2 2 2"
       rotation="0 140 0"
@@ -330,7 +324,7 @@
       </a-entity>
     
     <!-- Tzompantli -->
-        <a-entity id="Tzompantli" gltf-model="#tzompantli" position="6 0 -35" rotation="0 180 0" scale="1 1 1" class="cliquable"
+        <a-entity id="Tzompantli" gltf-model="#tzompantlimodel" position="6 0 -35" rotation="0 180 0" scale="1 1 1" class="cliquable"
         info-on-click="panel:#infoPanel; text:#infoValue; lines:
         Le tzompantli est un râtelier de crânes utilisé dans les cultures mésoaméricaines.|
         Il servait à exposer les crânes de prisionniers ou de personnes sacrifiés par des fins religieuse."></a-entity>
