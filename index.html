@@ -1,4 +1,4 @@
-<!DocTYPE html> 
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
@@ -11,11 +11,11 @@
        COMPOSANTS "BIBLIOTHÈQUE"
        ========================= -->
     <script> 
-        AFRAME.registerComponent('player-controller'), {
+        AFRAME.registerComponent('player-controller', {
       schema: {
         speed: { type: 'number', default: 3.5 },
         sprintMultiplier: { type: 'number', default: 1.6 }
-      },
+      }),
       init() {
         this.keys = Object.create(null);
         this.tmpVec3 = new THREE.Vector3();
@@ -183,6 +183,7 @@
       }
     });
     </script>
+</head>
 
     <body> 
     <!--Scène simplifiée : 
@@ -191,7 +192,7 @@
     - 2 composants mutualisables: info-on-click + guide-dialogue (+ hud-close) -->
 
     <a-scene 
-    scale="0 0 0"
+    scale="1 1 1"
     render="colorManagement: true"
     background="color:#88ccff"
     physics="gravity: -9.8"
@@ -217,7 +218,7 @@
       position="0 0 0"
       rotation="-90 0 0"
       width="120" height="120"
-      material="src= #grass"; repeat: 30 30"
+      material="src: #grass; repeat: 30 30"
       static-body>
     </a-plane>
 
@@ -327,6 +328,5 @@
         info-on-click="panel:#infoPanel; text:#infoValue; lines:
         Le tzompantli est un râtelier de crânes utilisé dans les cultures mésoaméricaines.|
         Il servait à exposer les crânes de prisionniers ou de personnes sacrifiés par des fins religieuse."></a-entity>
-    </a-entity>
     </a-scene>
 </body>
