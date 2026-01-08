@@ -17,17 +17,68 @@
         sprintMultiplier: { default: 1.8 }
       },
       init() {
+        const THREE = AFRAME.THREE; 
+        this.THREE = THREE; 
+        
         this.keys = {};
         // vecteurs réutilisables
         this.forward = new THREE.Vector3();
         this.right = new THREE.Vector3();
         this.tmpVec3 = new THREE.Vector3();
-        window.addEventListener('keydown', e => this.keys[e.code] = true);
-        window.addEventListener('keyup', e => this.keys[e.code] = false);
+
+        this._onKeyDown = (e) => { this.keys[e.code] = true; };
+        this._onKeyUp   = (e) => { this.keys[e.code] = false; };
+        window.addEventListener('keydown', this._onKeyDown);
+        window.addEventListener('keyup', this._onKeyUp);
+
+    this._up = new THREE.Vector3(0, 1, 0);
+  },
+       remove (){  
+       window.removeEventListener('keydown', this._onKeyDown);
+       window.removeEventListener('keyup', this._onKeyUp);
       },
       tick(time, dt) {
         const d = dt / 1000;
         if (!d) return;
+
+        let x = 0, z = 0;
+    if (this.keys['KeyW']) z -= 1;
+    if (this.keys['KeyS']) z += 1;
+    if (this.keys['KeyA']) x -= 1;
+    if (this.keys['KeyD']) x += 1;
+    if (!x && !z) return;
+
+    const len = Math.hypot(x, z) || 1;
+    x /= len; z /= len;
+
+        // Caméra active 
+        const camEl = this.el.sceneEl.querySelector('[camera]');
+        if (!camEl) return;
+
+        const camObj = camEl.object3D;
+
+        // forward caméra (yaw only)
+    this.forward.set(0, 0, -1).applyQuaternion(camObj.quaternion);
+    this.forward.y = 0;
+    if (this.forward.lengthSq() < 1e-6) return;
+    this.forward.normalize();
+
+    // right = up × forward
+    this.right.copy(this._up).cross(this.forward).normalize();
+
+    let speed = this.data.speed;
+    if (this.keys['ShiftLeft'] || this.keys['ShiftRight']) {
+      speed *= this.data.sprintMultiplier;
+    }
+
+    this.tmpVec3.set(0, 0, 0);
+    this.tmpVec3.addScaledVector(this.right, x);
+    this.tmpVec3.addScaledVector(this.forward, z);
+    this.tmpVec3.multiplyScalar(speed * d);
+
+    const obj = this.el.object3D;
+    obj.position.add(this.tmpVec3);
+        
 
         // Inputs
         let x = 0, z = 0;
@@ -49,7 +100,8 @@
         this.forward.set(0, 0, -1).applyQuaternion(cam.quaternion);
         this.forward.y = 0; this.forward.normalize();
 
-        this.right.copy(this.forward).cross(new THREE.Vector3(0, 1, 0)).normalize();
+       const UP = new THREE.Vector3(0, 1, 0);
+       this.right.copy(UP).cross(this.forward).normalize();
 
         // Vitesse
         let speed = this.data.speed;
@@ -80,35 +132,47 @@
         pitchMax: { type: 'number', default: 55 }
       },
       init() {
+        const THREE = AFRAME.THREE;
+        this.THREE = THREE;
         this.yaw = 180;
         this.pitch = 15;
         this.dragging = false;
 
-        this.el.sceneEl.addEventListener('renderstart', () => {
-          const canvas = this.el.sceneEl.canvas;
-          if (!canvas) return;
+        this._onMouseDown = (e) => {
+        if (e.button !== 0) return;
+        this.dragging = true;
+         };
+     this._onMouseUp = () => { this.dragging = false; };
+     this._onMouseMove = (e) => {
+     if (!this.dragging) return;
+     this.yaw   -= e.movementX * this.data.sensitivity;
+     this.pitch -= e.movementY * this.data.sensitivity;
+     this.pitch = Math.max(this.data.pitchMin, Math.min(this.data.pitchMax, this.pitch));
+    };
+      this.el.sceneEl.addEventListener('renderstart', () => {
+      const canvas = this.el.sceneEl.canvas;
+      if (!canvas) return;
+      canvas.addEventListener('mousedown', this._onMouseDown);
+      window.addEventListener('mouseup', this._onMouseUp);
+      window.addEventListener('mousemove', this._onMouseMove);
+      this._canvas = canvas;
+    });
+  },
 
-          canvas.addEventListener('mousedown', (e) => {
-            if (e.button !== 0) return;
-            this.dragging = true;
-          });
-          window.addEventListener('mouseup', () => { this.dragging = false; });
-          window.addEventListener('mousemove', (e) => {
-            if (!this.dragging) return;
-            this.yaw   -= e.movementX * this.data.sensitivity;
-            this.pitch -= e.movementY * this.data.sensitivity;
-            this.pitch = Math.max(this.data.pitchMin, Math.min(this.data.pitchMax, this.pitch));
-          });
-        });
-      },
+  remove() {
+    if (this._canvas) this._canvas.removeEventListener('mousedown', this._onMouseDown);
+    window.removeEventListener('mouseup', this._onMouseUp);
+    window.removeEventListener('mousemove', this._onMouseMove);
+  },
+        
       tick() {
         const target = this.data.target;
         if (!target) return;
 
         const t = target.object3D.position;
 
-        const yawRad = THREE.MathUtils.degToRad(this.yaw);
-        const pitchRad = THREE.MathUtils.degToRad(this.pitch);
+        const yawRad = this.THREE.MathUtils.degToRad(this.yaw);
+        const pitchRad = this.THREE.MathUtils.degToRad(this.pitch);
 
         const r = this.data.distance;
         const cosP = Math.cos(pitchRad);
@@ -145,6 +209,7 @@
         });
       }
     });
+
 
     // Guide
     AFRAME.registerComponent('guide-dialogue', {
@@ -206,8 +271,6 @@
 
     <!-- Assets -->
     <a-assets>
-      <!-- IMPORTANT : vérifie les noms réels des fichiers dans ton repo / dossier.
-           J'ai encodé les espaces par %20 mais l'idéal est de renommer les dossiers/fichiers pour éviter les espaces -->
       <img id="Kukulcan" src="models/volcanicrock.jpg">
       <img id="stone" src="models/Stone.JPG">
       <img id="grass" src="models/pastoo.JPG">
@@ -240,6 +303,10 @@
     <a-entity id="player" position="0 0 0" player-controller="speed: 3.6;">
       <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
     </a-entity>
+    <a-entity id="cam" camera third-person-camera="target: #player" 
+      cursor="rayOrigin: mouse"
+      raycaster="objects: .cliquable"></a-entity>
+
 
     <a-entity id="camRig" third-person-camera="target: #player; distance: 6; height: 2; sensitivity: 0.12;">
       <a-camera
@@ -323,5 +390,6 @@
   </a-scene>
 </body>
 </html>
+
 
 
