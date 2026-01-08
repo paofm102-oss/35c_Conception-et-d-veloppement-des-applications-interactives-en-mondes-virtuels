@@ -24,13 +24,11 @@
 
   <!-- Assets pour les textures -->
       <a-assets>
-         <img id="Kukulcan" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/TCom_Rock_CliffVolcanic2_header.jpg?v=1746379477374">
-         <img id="stone" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/Stone.JPG?v=1746379176283">
-         <img id= "grass" src= "https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/pastoo.JPG?v=1746456645508">
-         <img id="cenote" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/cenote.jpeg?v=1746456350032">
+         <img id="Kukulcan" src="models/volcanicrock.jpg">
+         <img id="stone" src="models/Stone.JPG">
+         <img id= "grass" src= "models/pastoo.JPG">
          <a-asset-item id="tree" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/tree .glb?v=1746454285573"></a-asset-item>  
-         <a-asset-item id= "tzompantli" src="https://cdn.glitch.me/f0de172e-e436-49ee-ae2c-94d671d266ff/Tzompantli .glb?v=1746383332024"></a-asset-item>
-         <a-asset-item id= "marche" scr="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/maya_temple .glb?v=1746452494044"></a-asset-item>
+         <a-asset-item id= "tzompantli" src="models/Tzompantli .glb"></a-asset-item> 
       </a-assets>
 
 
@@ -40,8 +38,7 @@
       <a-plane position="0 0 -40" rotation="-90 0 0" width="100" height="100" color="#228B22" src="#grass" scale="3 3 3"></a-plane>
       <a-plane position="0 0.06 -45" rotation="-90 0 0" width="15" height="20" color="#deb887" scale="3 3 3"></a-plane>
      
-      <!-- cenote-->
-      <a-plane position="-34 2 67" rotation="-90 0 0" width="15" height="15" src="#cenote" scale="3 3 3" class="clicable"></a-plane>
+
   <!-- Pyramide Maya : El Castillo -->
       <a-entity id="Castillo" position="0 0 -45" scale="3 3 3" class="clicable">
             <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#Kukulcan"></a-box>
@@ -98,8 +95,6 @@
             <a-cylinder position="5 1 -15" radius="0.3" height="2" src="#stone"></a-cylinder>
         </a-entity>
       
-    <!-- marche -->
-        <a-entity id="mercado" gltf-model="#marche" position="33 0 -8" scale="1 1 1"></a-entity>
 
         <!-- El Caracol Observatory -->
       <a-entity id="Caracol" position="-108 0 62" scale="3 3 3" class="clicable">
