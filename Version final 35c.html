@@ -300,19 +300,15 @@
     <a-entity gltf-model="#cloudmodel" position="10 24 -45" scale="5 5 5"></a-entity>
 
     <!-- JOUEUR + CAMÉRA 3e personne -->
-    <a-entity id="player" position="0 0 0" player-controller="speed: 3.6;">
-      <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
+    <a-entity id="player" position="0 0 4" player-controller="speed: 3.6;">
+    <a-cylinder radius="0.25" height="1.7" position="0 0.85 0" opacity="0.0"></a-cylinder>
     </a-entity>
-    <a-entity id="cam" camera third-person-camera="target: #player" 
-      cursor="rayOrigin: mouse"
-      raycaster="objects: .cliquable"></a-entity>
 
-
-    <a-entity id="camRig" third-person-camera="target: #player; distance: 6; height: 2; sensitivity: 0.12;">
+    <!-- caméra--> 
+    <a-entity id="camRig"> <a-camera id="cam" third-person-camera="target: #player; distance: 6; height: 2; sensitivity: 0.12;">
       <a-camera
         cursor="rayOrigin: mouse"
         raycaster="objects: .cliquable; recursive: true">
-      </a-camera>
 
       <a-entity
         position="0 0 -1"
@@ -321,19 +317,22 @@
       </a-entity>
 
       <!-- HUD -->
-      <a-entity id="dialoguePanel" class="cliquable" visible="false" position="0 -0.35 -1.2">
-        <a-plane width="1.6" height="0.45" color="#000" opacity="0.65"></a-plane>
-        <a-text id="dialogueValue" value="" align="center" color="#FFF" width="1.5" position="0 0 0.01"></a-text>
-        <a-box position="0 -0.33 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" hud-close="target: #dialoguePanel"></a-box>
-        <a-text value="Fermer" position="0 -0.33 0.03" align="center" color="#FFF" width="1.0"></a-text>
-      </a-entity>
+       <a-entity id="dialoguePanel" class="cliquable" visible="false" position="0 -0.35 -1.2">
+      <a-plane width="1.6" height="0.45" color="#000" opacity="0.65"></a-plane>
+      <a-text id="dialogueValue" value="" align="center" color="#FFF" width="1.5" position="0 0 0.01"></a-text>
+      <a-box position="0 -0.33 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" class="cliquable" hud-close="target: #dialoguePanel"></a-box>
+      <a-text value="Fermer" position="0 -0.33 0.03" align="center" color="#FFF" width="1.0"></a-text>
+    </a-entity>
 
       <a-entity id="infoPanel" class="cliquable" visible="false" position="0 0.35 -1.2">
-        <a-plane width="1.9" height="0.7" color="#FFF" opacity="0.92"></a-plane>
-        <a-text id="infoValue" value="" align="center" color="#111" width="1.75" position="0 0.12 0.01" font="https://cdn.aframe.io/fonts/mozillavr.fnt"></a-text>
-        <a-box position="0 -0.33 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" hud-close="target: #infoPanel"></a-box>
-        <a-text value="Fermer" position="0 -0.33 0.03" align="center" color="#FFF" width="1.0" font="https://cdn.aframe.io/fonts/mozillavr.fnt"></a-text>
+      <a-plane width="1.9" height="0.7" color="#FFF" opacity="0.92"></a-plane>
+      <a-text id="infoValue" value="" align="center" color="#111" width="1.75" position="0 0.12 0.01"
+              font="https://cdn.aframe.io/fonts/mozillavr.fnt"></a-text>
+      <a-box position="0 -0.33 0.01" width="0.55" height="0.18" depth="0.02" color="#c44" class="cliquable" hud-close="target: #infoPanel"></a-box>
+      <a-text value="Fermer" position="0 -0.33 0.03" align="center" color="#FFF" width="1.0"
+              font="https://cdn.aframe.io/fonts/mozillavr.fnt"></a-text>
       </a-entity>
+    </a-camera>
     </a-entity>
 
     <!-- Guide (cliquable) -->
@@ -390,6 +389,7 @@
   </a-scene>
 </body>
 </html>
+
 
 
 
